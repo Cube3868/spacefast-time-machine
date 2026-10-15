@@ -1,5 +1,7 @@
 # Spacefast Time Machine
 
+[![Validate](https://github.com/Cube3868/spacefast-time-machine/actions/workflows/ci.yml/badge.svg)](https://github.com/Cube3868/spacefast-time-machine/actions/workflows/ci.yml)
+
 A considered way to look back. Explore your Spacefast deployment history, compare two immutable versions, and safely promote an earlier ready version to live.
 
 [**Try the live demo**](https://space-xx8uckgsp.space.fast/?demo=1) · [**Open the app**](https://space-xx8uckgsp.space.fast/) · [**Watch the walkthrough**](https://space-xx8uckgsp.space.fast/walkthrough/)
@@ -18,7 +20,7 @@ Built for **Spacefast hosting from the first deployment**: a React and TypeScrip
 - Try real deployments without signing in: https://space-xx8uckgsp.space.fast/?demo=1
 - Source browser: https://space-xx8uckgsp.space.fast/source/
 - GitHub repository: https://github.com/Cube3868/spacefast-time-machine
-- Spacefast-hosted Git mirror: https://space-xx8uckgsp.space.fast/source.git
+- Spacefast-hosted Git repository: https://space-xx8uckgsp.space.fast/source.git
 
 The source browser and HTTP-cloneable Git repository are packaged on Spacefast alongside the app. They contain committed source only; no credentials, CLI state, dependencies, or test artifacts are published. No GitHub account is required to obtain the source. A source archive is also available under `/source/spacefast-time-machine.tar.gz`.
 

@@ -1,0 +1,37 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:02.500
+Spacefast Time Machine
+Every version. Within reach.
+
+00:00:02.500 --> 00:00:07.844
+01 Compare any two versions
+Two real deployments of the same site, side by side: v2 meets v1.
+
+00:00:07.844 --> 00:00:11.344
+01 Pick a version from history
+Selecting v1 flips the view: v1 meets v2, with live v2 alongside.
+
+00:00:11.344 --> 00:00:16.994
+02 Check any screen size
+v1's viewport narrows 700px in seven keyboard steps, then resets.
+
+00:00:16.994 --> 00:00:22.394
+03 See what changed
+A real unified diff of the served files, v2 to v1.
+
+00:00:22.394 --> 00:00:25.444
+03 Before / after
+The same file change, side by side.
+
+00:00:25.444 --> 00:00:29.994
+04 Share the exact comparison
+The link reopens these exact versions in this same view.
+
+00:00:29.994 --> 00:00:35.154
+05 Restore, with safeguards
+Public demo – restore disabled. Connected accounts: typed confirmation, provider approval when required, then live verification.
+
+00:00:35.154 --> 00:00:39.466
+Try the live demo: space-xx8uckgsp.space.fast/?demo=1
+Open source: github.com/Cube3868/spacefast-time-machine

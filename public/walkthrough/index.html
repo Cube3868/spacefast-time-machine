@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A quick look · Spacefast Time Machine</title>
+    <meta
+      name="description"
+      content="A short, captioned walkthrough of real Spacefast deployment previews, resizing, file diffs, and exact comparison links."
+    />
+    <meta property="og:title" content="Spacefast Time Machine · A quick look" />
+    <meta
+      property="og:description"
+      content="Every version. Within reach. See the real app in a short walkthrough."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content="https://space-xx8uckgsp.space.fast/social-card.png?v=launch-2"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        background: #121c23;
+        color: #f1f5f6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+      }
+      main {
+        max-width: 1160px;
+        margin: auto;
+        padding: 35px 24px 60px;
+      }
+      a {
+        color: #c8eea5;
+        text-underline-offset: 4px;
+      }
+      a:focus-visible,
+      video:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid #c8eea5;
+        outline-offset: 5px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        border-bottom: 1px solid #354550;
+        padding-bottom: 24px;
+      }
+      header a {
+        text-decoration: none;
+      }
+      header strong {
+        font-size: 22px;
+        letter-spacing: -0.6px;
+      }
+      header span {
+        font-size: 11px;
+        letter-spacing: 3px;
+        color: #bfd0d7;
+        display: block;
+        margin-top: 5px;
+      }
+      nav {
+        display: flex;
+        gap: 24px;
+        font-size: 14px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        letter-spacing: 3px;
+        color: #bfd0d7;
+        margin-top: 42px;
+      }
+      h1 {
+        font-size: clamp(32px, 5vw, 55px);
+        line-height: 1.12;
+        letter-spacing: -2px;
+        margin: 18px 0;
+      }
+      p {
+        line-height: 1.65;
+        color: #c4d2d9;
+      }
+      .lead {
+        max-width: 680px;
+        font-size: 17px;
+        margin-bottom: 28px;
+      }
+      .screen {
+        border: 1px solid #43535d;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #0a1117;
+        box-shadow: 0 28px 70px #0003;
+      }
+      video {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16/9;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 15px;
+        margin-top: 25px;
+      }
+      .button {
+        display: inline-block;
+        border: 1px solid #51634e;
+        border-radius: 8px;
+        padding: 12px 18px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .primary {
+        background: #c8eea5;
+        color: #1c3024;
+      }
+      .note {
+        font-size: 13px;
+        max-width: 850px;
+        margin-top: 25px;
+        color: #b4c6d0;
+      }
+      details {
+        margin-top: 30px;
+        border-top: 1px solid #354550;
+        padding-top: 24px;
+      }
+      summary {
+        cursor: pointer;
+        font-size: 15px;
+      }
+      ol {
+        color: #c4d2d9;
+        line-height: 1.8;
+        padding-left: 24px;
+      }
+      li {
+        padding: 5px 0;
+      }
+      footer {
+        margin-top: 38px;
+        font-size: 12px;
+        color: #aebfca;
+      }
+      @media (max-width: 550px) {
+        main {
+          padding: 22px 16px 40px;
+        }
+        header {
+          align-items: flex-start;
+        }
+        nav {
+          gap: 14px;
+          font-size: 13px;
+        }
+        header strong {
+          font-size: 18px;
+        }
+        header span {
+          font-size: 9px;
+          letter-spacing: 2px;
+        }
+        .eyebrow {
+          margin-top: 30px;
+        }
+        .screen {
+          border-radius: 10px;
+        }
+        h1 {
+          letter-spacing: -1px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <a href="/"><strong>spacefast</strong><span>TIME MACHINE</span></a>
+        <nav aria-label="Project links">
+          <a href="/?demo=1">Live demo</a
+          ><a href="https://github.com/Cube3868/spacefast-time-machine"
+            >GitHub ↗</a
+          >
+        </nav>
+      </header>
+      <p class="eyebrow">A QUICK LOOK</p>
+      <h1>Every version. Within reach.</h1>
+      <p class="lead">
+        Real deployment previews, resizable viewports, served-file changes, and
+        comparison links that remember exactly where you were.
+      </p>
+      <div class="screen">
+        <video
+          controls
+          playsinline
+          preload="metadata"
+          poster="poster.jpg"
+          aria-label="Spacefast Time Machine product walkthrough"
+        >
+          <source
+            src="spacefast-time-machine-walkthrough.mp4"
+            type="video/mp4"
+          />
+          <track
+            kind="captions"
+            src="walkthrough.vtt"
+            srclang="en"
+            label="English"
+          />
+          Your browser cannot play this video.
+          <a href="spacefast-time-machine-walkthrough.mp4">Download the MP4</a>
+          or read the transcript below.
+        </video>
+      </div>
+      <div class="actions">
+        <a class="button primary" href="/?demo=1">Try the live demo ↗</a>
+        <a class="button" href="spacefast-time-machine-walkthrough.mp4" download
+          >Download walkthrough ↓</a
+        >
+        <a href="https://github.com/Cube3868/spacefast-time-machine"
+          >Explore the source</a
+        >
+      </div>
+      <p class="note">
+        Captured from the real public demo and edited by Claude. The demo
+        disables restore. Connected-account restores require typed confirmation,
+        Spacefast approval when requested, and operation plus live-version
+        verification. This video does not depict a restore taking place.
+      </p>
+      <details>
+        <summary>Read the walkthrough transcript</summary>
+        <ol>
+          <li>
+            Compare two real, immutable Spacefast deployment versions side by
+            side. Choose an earlier version from the timeline.
+          </li>
+          <li>
+            Resize a preview's viewport to inspect the site's responsive
+            behavior, then reset it.
+          </li>
+          <li>
+            Open Files to inspect actual served-file changes. Switch between a
+            unified diff and before/after text.
+          </li>
+          <li>
+            Share the exact Space, version pair, and selected view. A private
+            link still requires account permission.
+          </li>
+          <li>
+            The public demo is read-only. Connected-account restores use
+            confirmation, provider approval when required, and live
+            verification.
+          </li>
+          <li>
+            Try the public demo or inspect the MIT-licensed source on GitHub.
+            The entire app is hosted on Spacefast.
+          </li>
+        </ol>
+      </details>
+      <footer>
+        Independent, open-source software · Hosted on Spacefast · MIT licensed
+      </footer>
+    </main>
+  </body>
+</html>

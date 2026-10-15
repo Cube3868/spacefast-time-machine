@@ -22,7 +22,10 @@ text(56,250,'Within reach.',54,'#c8eea5',True)
 text(59,335,'Compare. Inspect. Restore.',22,'#d4dee3')
 text(59,376,'A little perspective on your past.',16,'#a9bdc7')
 
-shot=Image.open(ROOT/'artifacts/walkthrough-compare.png').convert('RGB')
+capture=ROOT/'artifacts/walkthrough-compare.png'
+if not capture.exists():
+    capture=ROOT/'docs/images/comparison.jpg'
+shot=Image.open(capture).convert('RGB')
 # Show real version previews, without borrowing interface state from a mock.
 shot=shot.crop((648,449,1562,1000))
 shot=shot.resize((602*S,418*S),Image.Resampling.LANCZOS)
@@ -41,5 +44,6 @@ im.convert('RGB').resize((1200,630),Image.Resampling.LANCZOS).save(ROOT/'public/
 images=ROOT/'docs/images'
 images.mkdir(parents=True,exist_ok=True)
 for source,target in [('walkthrough-compare.png','comparison.jpg'),('walkthrough-files.png','file-diff.jpg')]:
-    Image.open(ROOT/'artifacts'/source).convert('RGB').save(images/target,quality=88,optimize=True)
+    if (ROOT/'artifacts'/source).exists():
+        Image.open(ROOT/'artifacts'/source).convert('RGB').save(images/target,quality=88,optimize=True)
 print('Rendered social card and real public-demo README screenshots.')
