@@ -1,0 +1,5 @@
+scripts/qa-*.js
+dist/
+node_modules/
+artifacts/
+.local/

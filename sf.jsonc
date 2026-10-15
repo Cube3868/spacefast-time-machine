@@ -1,0 +1,23 @@
+{
+  "$schema": "https://spacefast.com/schemas/sf.json",
+  "name": "Spacefast Time Machine",
+  "build": { "buildCommand": "npm run build", "outputDirectory": "dist" },
+  "runtime": { "kind": "functions", "compatibilityDate": "2026-07-01" },
+  "headers": [
+    {
+      "source": "/*",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()",
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https:; connect-src 'self'; frame-src https:; frame-ancestors 'none'; object-src 'none'; base-uri 'none'; form-action 'self' https://api.spacefast.com",
+        },
+      ],
+    },
+  ],
+}

@@ -1,0 +1,1412 @@
+{
+  "source": "https://api.spacefast.com/openapi.json",
+  "version": "0.6.0",
+  "retrievedAt": "2026-10-15T14:53:19.641Z",
+  "paths": {
+    "/v1/me": {
+      "get": {
+        "operationId": "getMe",
+        "summary": "Get the authenticated identity",
+        "description": "Returns the authenticated subject with its tenant grants, team memberships, and per-team plan summary.",
+        "parameters": [
+          {
+            "name": "teamId",
+            "required": false,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/v1/spaces": {
+      "get": {
+        "operationId": "listSpaces",
+        "summary": "List spaces",
+        "description": "Returns the spaces your credential can access, newest-first. Filter by team or external principal to narrow the list.",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "principal",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "team",
+            "required": false,
+            "type": "string"
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createSpace",
+        "summary": "Create a space",
+        "description": "Creates a space under a team with a chosen or generated slug. Pass `source` to create it from a GitHub repository and start its first build. Use POST /v1/publish to create a space and publish content in one call.",
+        "requestBody": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "teamId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "principal": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "team",
+                    "external"
+                  ],
+                  "description": "Owning principal kind."
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "pattern": "^[^\\s/\\\\]+$",
+                  "description": "Tenant-local principal id: a team id or an integrator external customer id."
+                }
+              },
+              "required": [
+                "type",
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "slug": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 55
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            },
+            "config": {
+              "description": "Initial SpaceConfig overlay for the new space.",
+              "type": "object",
+              "properties": {
+                "index": {
+                  "description": "Directory index file; false disables index resolution.",
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "boolean",
+                      "const": false
+                    }
+                  ]
+                },
+                "fallback": {
+                  "description": "Fallback document. \"/index.html\" means SPA. Defaults to the nearest 404.html.",
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Committed file served when no exact route matches."
+                        },
+                        "status": {
+                          "type": "integer",
+                          "minimum": 100,
+                          "maximum": 599,
+                          "description": "Response status for the fallback."
+                        }
+                      },
+                      "required": [
+                        "path",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "cleanUrls": {
+                  "description": "Serve flat `<name>.html` files at their extensionless URL (`/about` serves `about.html`). Defaults to on, unless a 200-status SPA fallback is configured.",
+                  "type": "boolean"
+                },
+                "listing": {
+                  "description": "Enable automatic directory listings.",
+                  "type": "boolean"
+                },
+                "meta": {
+                  "description": "Listing, viewer, sharing, and browser icon metadata.",
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    "description": {
+                      "type": "string",
+                      "maxLength": 1000
+                    },
+                    "image": {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    "favicon": {
+                      "type": "string",
+                      "maxLength": 2000
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "superpowers": {
+                  "description": "Platform-managed built-ins and custom JavaScript snippets.",
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "description": "Master switch for platform-managed injections.",
+                      "type": "boolean"
+                    },
+                    "disable_all_injection": {
+                      "description": "When true, suppresses every platform-managed script/tag injection.",
+                      "type": "boolean"
+                    },
+                    "googleAnalytics": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "measurementId": {
+                          "type": "string",
+                          "maxLength": 64
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "googleTagManager": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "containerId": {
+                          "type": "string",
+                          "maxLength": 64
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "javascriptTags": {
+                      "maxItems": 16,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "maxLength": 128
+                          },
+                          "name": {
+                            "type": "string",
+                            "maxLength": 160
+                          },
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "code": {
+                            "type": "string",
+                            "maxLength": 8192
+                          }
+                        },
+                        "required": [
+                          "code"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "tags": {
+                      "type": "object",
+                      "properties": {
+                        "inheritance": {
+                          "type": "object",
+                          "properties": {
+                            "inherited": {
+                              "type": "boolean"
+                            },
+                            "overrides": {
+                              "maxItems": 128,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "tagId": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "disabled": {
+                                    "default": false,
+                                    "type": "boolean"
+                                  },
+                                  "reason": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "maxLength": 500
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "tagId"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "requireReview": {
+                          "description": "When true, integration changes must go through review before release.",
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "templates": {
+                  "description": "Files that receive {{ vars.NAME }} substitution at finalize.",
+                  "maxItems": 100,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "theme": {
+                  "description": "Visual tokens for every Spacefast-authored page.",
+                  "type": "object",
+                  "properties": {
+                    "accent": {
+                      "description": "Accent color for Spacefast-authored pages.",
+                      "type": "string",
+                      "maxLength": 64,
+                      "pattern": "^(?:#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|rgba?\\([0-9.,\\s%/]{1,64}\\)|hsla?\\([0-9.,\\s%deg/]{1,64}\\)|[a-zA-Z]{3,30})$"
+                    },
+                    "background": {
+                      "description": "Background color for Spacefast-authored pages.",
+                      "type": "string",
+                      "maxLength": 64,
+                      "pattern": "^(?:#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|rgba?\\([0-9.,\\s%/]{1,64}\\)|hsla?\\([0-9.,\\s%deg/]{1,64}\\)|[a-zA-Z]{3,30})$"
+                    },
+                    "logo": {
+                      "description": "Logo image (https URL or root-relative path) shown in the brand row.",
+                      "type": "string",
+                      "maxLength": 2000,
+                      "pattern": "^(?:https:\\/\\/[^\\s\"'<>\\\\]+|\\/[^\\s\"'<>\\\\]*)$"
+                    },
+                    "name": {
+                      "description": "Display name shown in the brand row of Pages defaults.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "font": {
+                      "description": "Font-family stack applied to Spacefast-authored pages.",
+                      "type": "string",
+                      "maxLength": 256,
+                      "pattern": "^[A-Za-z0-9 ,'\"-]{1,256}$"
+                    },
+                    "hideSpacefastBranding": {
+                      "description": "Remove the Spacefast badge from default pages when the plan permits it.",
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "collab": {
+                  "description": "Comments overlay delivery. `default` injects Spacefast's UI; `custom` injects only /__spacefast/collab.css for a self-built UI. Turning comments off lives in the Space's Comments settings, not here.",
+                  "type": "object",
+                  "properties": {
+                    "ui": {
+                      "default": "default",
+                      "type": "string",
+                      "enum": [
+                        "default",
+                        "custom"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "build": {
+                  "description": "Default settings for remote repository builds.",
+                  "type": "object",
+                  "properties": {
+                    "rootDirectory": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "installDirectory": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "installCommand": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "buildCommand": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "outputDirectory": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "ignoredBuildCommand": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "frameworkPreset": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "platformPreset": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "allowUnsupportedPlatformFeatures": {
+                      "type": "boolean"
+                    },
+                    "timeoutSeconds": {
+                      "type": "integer",
+                      "minimum": 60,
+                      "maximum": 7200
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "placement": {
+                  "type": "object",
+                  "properties": {
+                    "burstable": {
+                      "type": "boolean"
+                    },
+                    "edge": {
+                      "description": "Run the redirects and headers the edge can answer at the edge, ahead of the space. Takes effect at the next publish. Off by default; the rules the edge cannot answer faithfully stay with the space either way.",
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "description": "Placement controls for this space."
+                },
+                "markdownNegotiation": {
+                  "description": "Accepted serving flag; runtime enforcement ships separately.",
+                  "type": "boolean"
+                },
+                "firewall": {
+                  "description": "Requests to block or challenge before they reach the space.",
+                  "maxItems": 50,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "pattern": "^[a-z0-9][a-z0-9_-]{0,60}$",
+                        "description": "Name for this rule: lowercase letters, digits, `-` and `_`, up to 61 characters. Names the rule in the CLI and the API."
+                      },
+                      "description": {
+                        "description": "What this rule is for.",
+                        "type": "string",
+                        "maxLength": 255
+                      },
+                      "action": {
+                        "type": "string",
+                        "enum": [
+                          "block",
+                          "challenge"
+                        ],
+                        "description": "`block` answers without reaching the space; `challenge` asks for proof of a human."
+                      },
+                      "status": {
+                        "description": "Status a blocked request gets. Defaults to 403. Blocks only.",
+                        "type": "integer",
+                        "minimum": 400,
+                        "maximum": 499
+                      },
+                      "match": {
+                        "$ref": "#/components/schemas/TrafficRuleMatch"
+                      },
+                      "any": {
+                        "description": "Fire when any match field holds. Defaults to false: all of them have to.",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "action",
+                      "match"
+                    ],
+                    "additionalProperties": false,
+                    "description": "Blocks or challenges requests before they reach the space. At most 47 authored comparisons; platform transport paths are exempt. An any rule uses one provider fence per comparison."
+                  }
+                },
+                "cache": {
+                  "description": "Cache behavior, including which requests skip it.",
+                  "type": "object",
+                  "properties": {
+                    "bypass": {
+                      "description": "Requests that skip the cache, in order. At most 50.",
+                      "maxItems": 50,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "pattern": "^[a-z0-9][a-z0-9_-]{0,60}$",
+                            "description": "Name for this rule: lowercase letters, digits, `-` and `_`, up to 61 characters. Names the rule in the CLI and the API."
+                          },
+                          "description": {
+                            "description": "What this rule is for.",
+                            "type": "string",
+                            "maxLength": 255
+                          },
+                          "match": {
+                            "$ref": "#/components/schemas/TrafficRuleMatch"
+                          },
+                          "any": {
+                            "description": "Fire when any match field holds. Defaults to false: all of them have to.",
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "match"
+                        ],
+                        "additionalProperties": false,
+                        "description": "Serves matching requests fresh instead of from the cache."
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "redirects": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Request path to match. * is a splat, :name captures a segment."
+                      },
+                      "destination": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Path or absolute URL. :splat and :name from the source are substituted."
+                      },
+                      "status": {
+                        "description": "Redirect status, 302 when omitted. To serve other content under this URL, use rewrites.",
+                        "type": "number",
+                        "enum": [
+                          301,
+                          302,
+                          303,
+                          307,
+                          308
+                        ]
+                      },
+                      "force": {
+                        "description": "Answer even when the request path resolves to a committed file, the ! of a _redirects rule.",
+                        "type": "boolean"
+                      },
+                      "query": {
+                        "description": "Query parameters the request must carry, as parameter name to capture name: { \"id\": \"id\" } is the name=:capture token id=:id.",
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                        }
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "destination"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Browser redirect rules. Same matcher grammar as _redirects, and _redirects rules match first."
+                },
+                "rewrites": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Request path to match. * is a splat, :name captures a segment."
+                      },
+                      "destination": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Path to serve under this URL, or an absolute URL to proxy. :splat and :name from the source are substituted."
+                      },
+                      "cache": {
+                        "description": "Let shared caches store the proxy response. Absolute-URL destinations only.",
+                        "type": "string",
+                        "const": "shared"
+                      },
+                      "force": {
+                        "description": "Answer even when the request path resolves to a committed file, the ! of a _redirects rule.",
+                        "type": "boolean"
+                      },
+                      "query": {
+                        "description": "Query parameters the request must carry, as parameter name to capture name: { \"id\": \"id\" } is the name=:capture token id=:id.",
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+                        }
+                      },
+                      "notFound": {
+                        "description": "Serve the destination with status 404, the 404 of a _redirects rule. The destination must be a path.",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "destination"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Rewrite and proxy rules: the URL stays, the content comes from the destination. _redirects rules match first, then redirects."
+                },
+                "headers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Request path to match."
+                      },
+                      "headers": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "key": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "value": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "key",
+                                "value"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "key": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "remove": {
+                                  "type": "boolean",
+                                  "const": true,
+                                  "description": "Remove this header instead of setting it, the !Name line of a _headers block."
+                                }
+                              },
+                              "required": [
+                                "key",
+                                "remove"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "headers"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Response headers to set or remove on matching requests. A _headers rule wins on the same header name."
+                },
+                "users": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "providers": {
+                      "type": "object",
+                      "properties": {
+                        "google": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "mode": {
+                                  "type": "string",
+                                  "const": "disabled"
+                                }
+                              },
+                              "required": [
+                                "mode"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "mode": {
+                                  "type": "string",
+                                  "const": "managed"
+                                }
+                              },
+                              "required": [
+                                "mode"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "mode": {
+                                  "type": "string",
+                                  "const": "direct"
+                                },
+                                "clientId": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 512
+                                }
+                              },
+                              "required": [
+                                "mode",
+                                "clientId"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "gravatar": {
+                          "type": "object",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "enabled"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "spacefast": {
+                          "type": "object",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "enabled"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "google",
+                        "gravatar",
+                        "spacefast"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "enabled",
+                    "providers"
+                  ],
+                  "additionalProperties": false
+                },
+                "dataSources": {
+                  "description": "Named public WordPress sources exposed to repository builds; at most 32 entries.",
+                  "maxProperties": 32,
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                    "description": "Stable source identifier: 1-128 letters, numbers, or underscores; starts with a letter or underscore; excludes __proto__, constructor, and prototype.",
+                    "not": {
+                      "enum": [
+                        "__proto__",
+                        "constructor",
+                        "prototype"
+                      ]
+                    }
+                  },
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "wordpress"
+                      },
+                      "url": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2048,
+                        "format": "uri",
+                        "pattern": "^https:\\/\\/[^/?#@%\\\\\\s]+(?:\\/[^?#\\\\\\s]*)?$",
+                        "description": "Canonical public WordPress URL: lowercase https:// scheme; IDNA-normalized DNS labels (1-63 characters each, 253 total, alphanumeric edges, alphanumeric or hyphen interior), canonical dotted-decimal IPv4, or bracketed hexadecimal IPv6; optional nonzero port and UTF-8 path. Percent escapes are validated and canonicalized; encoded percent signs, slashes, backslashes, controls, invalid UTF-8, whitespace other than encoded ASCII path spaces, credentials, queries, fragments, and trailing-dot hosts are rejected. Default port, host case, IDNs, dot segments, path encoding, and trailing path slashes are normalized before storage."
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "url"
+                    ],
+                    "additionalProperties": false,
+                    "description": "A public WordPress site exposed to repository builds as a content source."
+                  }
+                },
+                "defaultDataSource": {
+                  "description": "Name of the configured source exposed through `WORDPRESS_URL`. It must match a `dataSources` entry. When omitted, the first source in bytewise name order is used.",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                  "not": {
+                    "enum": [
+                      "__proto__",
+                      "constructor",
+                      "prototype"
+                    ]
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "access": {
+              "description": "Set the initial root access for this new team-owned Space. Omit this field to use the team's default.",
+              "type": "string",
+              "enum": [
+                "private",
+                "team",
+                "public"
+              ]
+            },
+            "dataLocation": {
+              "description": "Data location for a new Space; \"auto\" lets placement decide.",
+              "type": "string",
+              "enum": [
+                "auto",
+                "ams",
+                "bur",
+                "dca",
+                "dfw"
+              ]
+            },
+            "source": {
+              "description": "Create from an authorized GitHub repository or fork the main branch of a Source available Spacefast repository. GitHub connections start their initial sync and deployment; remixes copy main and publish an initial live build. Team-owned Spaces only.",
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "provider": {
+                      "type": "string",
+                      "const": "github"
+                    },
+                    "installationId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "GitHub App installation that holds the repository."
+                    },
+                    "repositoryId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Immutable GitHub repository id."
+                    },
+                    "repositoryFullName": {
+                      "type": "string",
+                      "minLength": 3,
+                      "description": "The repository as owner/name."
+                    },
+                    "branch": {
+                      "description": "Production branch. Defaults to the repository's default branch.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "provider",
+                    "installationId",
+                    "repositoryId",
+                    "repositoryFullName"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "provider": {
+                      "type": "string",
+                      "const": "spacefast_fork"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "Spacefast source URL or dashboard remix link. Forks main into an independent repository, then builds and publishes the copy."
+                    }
+                  },
+                  "required": [
+                    "provider",
+                    "url"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "/v1/spaces/{spaceId}": {
+      "get": {
+        "operationId": "getSpace",
+        "summary": "Get a space",
+        "description": "Returns one space with its status, URLs, channels, and policy. Accepts a `spc_` id or a slug; a slug that matches spaces in more than one of your teams fails with `ambiguous_space_slug`. Claim-token reads extend an anonymous space's expiry window.",
+        "parameters": [
+          {
+            "name": "spaceId",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/v1/spaces/{spaceId}/versions": {
+      "get": {
+        "operationId": "listSpaceVersions",
+        "summary": "List a space's versions",
+        "description": "Lists space versions, newest first. Each item includes its status, number, and permanent Version URL.",
+        "parameters": [
+          {
+            "name": "spaceId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "gitCommitSha",
+            "required": false,
+            "type": "string"
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createSpaceVersion",
+        "summary": "Start a new version upload",
+        "description": "Creates a version and returns upload instructions. The declared file manifest drives change-only uploads: unchanged files are retained from the previous version and only the remainder is requested.",
+        "parameters": [
+          {
+            "name": "spaceId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "description": "Publish provenance recorded on the version; defaults to {kind: \"direct_upload\"}.",
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "direct_upload",
+                    "cli",
+                    "dashboard",
+                    "api",
+                    "git",
+                    "import",
+                    "agent",
+                    "build",
+                    "variable_update",
+                    "config_update"
+                  ],
+                  "description": "How this version was produced."
+                },
+                "client": {
+                  "description": "Publishing client attribution, for example `spacefast-cli/1.2.3`.",
+                  "type": "string",
+                  "maxLength": 255
+                },
+                "branch": {
+                  "description": "Git branch the publish came from.",
+                  "type": "string",
+                  "maxLength": 255
+                },
+                "commit": {
+                  "description": "Git commit SHA the publish came from.",
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "message": {
+                  "description": "Plain-language description of the publish (the version changelog entry, commit message, or release note). This is THE spelling for the publish description; the version files-diff API is the fallback when none is given.",
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "dirty": {
+                  "description": "Whether the working tree had uncommitted changes at publish time.",
+                  "type": "boolean"
+                },
+                "metadata": {
+                  "description": "Additional provenance (repository, CI run URL, workflow, actor, ...).",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "git": {
+                  "type": "object",
+                  "properties": {
+                    "repository": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "repositoryFullName": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "repositoryUrl": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "ref": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "branch": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "branchAliasUrl": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "commit": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "commitSha": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "pullRequestNumber": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "kind"
+              ],
+              "additionalProperties": false
+            },
+            "publishMode": {
+              "default": "additive",
+              "description": "How to interpret omitted paths in `files`: `additive` retains existing paths unless explicitly replaced; `snapshot` treats `files` as the complete desired manifest.",
+              "type": "string",
+              "enum": [
+                "additive",
+                "snapshot"
+              ]
+            },
+            "sourceMetadata": {
+              "description": "Additional control-plane-only provenance for build and deploy read models.",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "buildLog": {
+              "description": "Build transcript truncated to a bounded size for deploys that ran a local build before publishing.",
+              "type": "string",
+              "maxLength": 524288
+            },
+            "finalize": {
+              "description": "Finalize intent for a declared upload. The version finalizes itself once Spacefast confirms every declared file landed: at create when nothing needs uploading, otherwise on the `uploads/refresh` call that finds nothing pending. Call refresh after the last upload. The explicit finalize call remains available for recovery and replay.",
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "live",
+                        "production"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            "files": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Version-relative POSIX path. Canonicalized at intake to UTF-8 NFC, percent-decoded exactly once; max 1,024 bytes in canonical form."
+                  },
+                  "size": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "File size in bytes."
+                  },
+                  "sha256": {
+                    "description": "Optional SHA-256 content digest, 64 lowercase hex characters without the `sha256:` prefix. Omit it to let the runtime hash uploaded bytes; include it to upload by content address, with the digest verified as the bytes land.",
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "contentType": {
+                    "description": "Optional content type for serving metadata.",
+                    "type": "string"
+                  },
+                  "sourceUrl": {
+                    "description": "Optional HTTPS URL the runtime can fetch directly for this file instead of receiving bytes from the client.",
+                    "type": "string",
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "path",
+                  "size"
+                ],
+                "additionalProperties": false
+              },
+              "description": "The complete desired file manifest. `sha256` is optional: omit it to upload by path and let the runtime hash the bytes, or include it to upload by content address, with the digest verified as the bytes land. A `sourceUrl` entry is fetched and hashed by the runtime."
+            },
+            "configOnly": {
+              "description": "Recompile the configuration on top of the current ready artifact without replacing content: the file catalog carries forward, Functions/Zero declarations and runtime detection are preserved, and the version records a `config_update` source. `files` may name only `sf.jsonc` (the shipped configuration); every other path keeps the current version's bytes. Requires an existing ready version to carry forward. Runtime changes still need a normal content publish.",
+              "type": "boolean"
+            },
+            "deletePaths": {
+              "default": [],
+              "description": "Explicit paths to remove when `publishMode` is additive. Omitted paths are retained. Only listed paths are deleted.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "immutableAssetPrefixes": {
+              "description": "Publisher-owned directory prefixes whose declared files are immutable generation assets. Snapshot publishes retain the matching files from the current generation for exactly one subsequent generation.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 2
+              }
+            }
+          },
+          "required": [
+            "files"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "/v1/spaces/{spaceId}/versions/{versionId}": {
+      "get": {
+        "operationId": "getSpaceVersion",
+        "summary": "Get a version",
+        "description": "Returns one version with its status, number, permanent Version URL, and diagnostics. Anonymous claim tokens can poll this route to follow a publish.",
+        "parameters": [
+          {
+            "name": "spaceId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "versionId",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/v1/spaces/{spaceId}/versions/{versionId}/preview-session": {
+      "post": {
+        "operationId": "createSpaceVersionPreviewSession",
+        "summary": "Open a version in a preview session",
+        "description": "Mints a short-lived URL that opens one page of this version — including a private one — with its stylesheets, scripts and images authorized too. The URL is meant to be framed: following it once exchanges the proof it carries for a cookie on the version's own origin and redirects to the same page without it, so the framed document holds no secret. The session authorizes that version only. Requires the same permission as minting a file link.",
+        "parameters": [
+          {
+            "name": "spaceId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "versionId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "landingPath": {
+              "default": "/",
+              "description": "Page to open in the preview. Defaults to the version's root.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "/v1/spaces/{spaceId}/versions/{versionId}/promote": {
+      "post": {
+        "operationId": "promoteSpaceVersion",
+        "summary": "Promote a version",
+        "description": "Promotes a ready version to a channel (`live` by default). Use this for rollback: promote any earlier ready version. Waits for completion by default. Pass `async=1` to get an operation handle to poll instead.",
+        "parameters": [
+          {
+            "name": "spaceId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "versionId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "async",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "Idempotency-Key",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "channel": {
+              "description": "Channel to point at this version. Defaults to \"live\". Non-live channel names are rejected with `channel_unsupported` until additional channels ship.",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "/v1/operations/{operationId}": {
+      "get": {
+        "operationId": "getOperation",
+        "summary": "Get an operation",
+        "description": "Returns one asynchronous operation's status, progress, and outcome. Poll this endpoint after a mutation that returns an operation handle.",
+        "parameters": [
+          {
+            "name": "operationId",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/v1/spaces/{spaceId}/versions/compare": {
+      "get": {
+        "operationId": "compareSpaceDeploymentVersions",
+        "summary": "Compare deployment files",
+        "description": "Compare the served files of two completed deployment versions. This does not compare Git source. File contents require versions:download access. Binary, oversized, or unavailable contents include a reason instead of a partial diff.",
+        "parameters": [
+          {
+            "name": "spaceId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "baseVersionId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "versionId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "path",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "type": "integer"
+          }
+        ]
+      }
+    }
+  }
+}

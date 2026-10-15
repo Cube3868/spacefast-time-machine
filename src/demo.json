@@ -1,0 +1,58 @@
+{
+  "capturedAt": "2026-10-15T13:04:43.460Z",
+  "space": {
+    "id": "spc_ee81cba49aa7483181d752847a250bf9",
+    "title": "Orbital Studio · Time Machine demo",
+    "slug": "tm-orbital-lab-1015",
+    "status": "active",
+    "disabled": false,
+    "liveUrl": "https://tm-orbital-lab-1015.space.fast/",
+    "liveVersionId": "ver_095054a0c3ea489e81706f8c603f4cbb",
+    "updatedAt": "2026-10-15T13:03:58.000Z",
+    "teamSlug": "abneybriar-team"
+  },
+  "versions": [
+    {
+      "release": 2,
+      "id": "ver_095054a0c3ea489e81706f8c603f4cbb",
+      "spaceId": "spc_ee81cba49aa7483181d752847a250bf9",
+      "number": 2,
+      "status": "ready",
+      "immutableUrl": "https://tm-orbital-lab-1015--v2.space.fast/",
+      "immutableUrlStatus": "ready",
+      "gitCommitSha": null,
+      "message": "Room to grow: the Verdant release",
+      "branch": null,
+      "publisher": "Spacefast Time Machine demo",
+      "createdAt": "2026-10-15T13:03:56.334Z",
+      "readyAt": "2026-10-15T13:03:58.000Z",
+      "fileCount": 2,
+      "totalBytes": 4910,
+      "filesAddedCount": 0,
+      "filesChangedCount": 1,
+      "filesRemovedCount": 0,
+      "isCurrentProduction": true
+    },
+    {
+      "release": 1,
+      "id": "ver_ed7fee22bb1842d3badda9f627fbfffe",
+      "spaceId": "spc_ee81cba49aa7483181d752847a250bf9",
+      "number": 1,
+      "status": "ready",
+      "immutableUrl": "https://tm-orbital-lab-1015--v1.space.fast/",
+      "immutableUrlStatus": "ready",
+      "gitCommitSha": null,
+      "message": "A warmer welcome: the Terra release",
+      "branch": null,
+      "publisher": "Spacefast Time Machine demo",
+      "createdAt": "2026-10-15T13:03:49.643Z",
+      "readyAt": "2026-10-15T13:03:51.000Z",
+      "fileCount": 2,
+      "totalBytes": 4881,
+      "filesAddedCount": 0,
+      "filesChangedCount": 0,
+      "filesRemovedCount": 0,
+      "isCurrentProduction": false
+    }
+  ]
+}

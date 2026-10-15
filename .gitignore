@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.spacefast/state.json
+.spacefast/auth.json
+.env*
+!.env.example
+test-results/
+playwright-report/
+.local/
+artifacts/
+.playwright-cli/
+/.spacefast-*
+.spacefast/.spacefast-*
+.spacefast/.space-link-*.tmp
