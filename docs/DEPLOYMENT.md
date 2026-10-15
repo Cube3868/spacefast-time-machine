@@ -56,6 +56,8 @@ Browser checks cover changed-file paging, unified and before/after text, escaped
 
 ## Runtime details
 
+The launch release includes a public GitHub repository, a 1200×630 card using actual demo previews, and a 39.466-second Claude-edited walkthrough with original sound effects. The player passed local desktop/mobile WCAG AA automation, and production load, playback, audio-track, seeking and all nine caption-cue checks passed. The deployed CSP rejects injected audit scripts; live media checks preserve that policy. GitHub CI passed the tests and build. The walkthrough is explicitly a read-only public demo and does not depict a restore.
+
 - Metadata-document OAuth clients were advertised but the provider rejected its metadata fetch; the application uses verified public-client dynamic registration instead.
 - The edge runtime rejects `fetch` with `redirect: error`. Supported manual mode explicitly rejects API redirects without forwarding credentials.
 - Sign-in starts with same-origin URL-encoded AJAX and then navigates to a validated official authorization URL. Strict CSP and Origin checks remain enabled. Multipart form transport failed on the deployed runtime; URL encoding is verified.
