@@ -4,9 +4,9 @@
 
 A considered way to look back. Explore your Spacefast deployment history, compare two immutable versions, and safely promote an earlier ready version to live.
 
-[**Try the live demo**](https://space-xx8uckgsp.space.fast/?demo=1) · [**Open the app**](https://space-xx8uckgsp.space.fast/) · [**Watch the walkthrough**](https://space-xx8uckgsp.space.fast/walkthrough/)
+[**Try the live demo**](https://space-xx8uckgsp.space.fast/?demo=1) · [**Open the app**](https://space-xx8uckgsp.space.fast/) · [**Watch the launch film**](https://space-xx8uckgsp.space.fast/spacefast-time-machine-go-back.mp4)
 
-![Real immutable Spacefast deployments compared side by side](docs/images/comparison.jpg)
+[![Watch the Spacefast Time Machine launch film](docs/images/go-back-poster.jpg)](https://space-xx8uckgsp.space.fast/spacefast-time-machine-go-back.mp4)
 
 The public demo uses two actual deployed releases and disables restore. Connect your own account to browse permitted Spaces, inspect version history, and use a typed confirmation for an eligible restore. Spacefast may require a separate approval; success appears only after the operation and live version are verified.
 
@@ -31,7 +31,7 @@ npm ci
 npm run dev
 ```
 
-The GitHub source includes the MIT license, real deployment screenshots, and setup and API documentation. The walkthrough is a captioned recording of the real public demo, edited by Claude; it does not depict a simulated restore as a live operation.
+The GitHub source includes the MIT license, real deployment screenshots, and setup and API documentation. The 26-second launch film was creatively directed and edited by Claude Opus 5.5 at high effort, using real public-demo captures with original animation, music, and sound design. Its rewind transition is an editorial effect, and it does not depict a simulated restore as a live operation.
 
 Use `git -c http.maxRequests=1 clone https://space-xx8uckgsp.space.fast/source.git` to avoid intermittent parallel-download errors. A complete Git bundle is also available at `/source/spacefast-time-machine.bundle`: download it and run `git clone -b main spacefast-time-machine.bundle spacefast-time-machine` if HTTP cloning fails.
 
